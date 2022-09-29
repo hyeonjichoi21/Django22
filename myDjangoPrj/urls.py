@@ -18,6 +18,8 @@ from django.urls import path, include
 
 urlpatterns = [ # IP주소/
     path('admin/', admin.site.urls), #ip주소/admin/
-    path('blog/', include('blog.urls')) # IP주소/blog/
+    path('blog/', include('blog.urls')), # IP주소/blog/
+    path('', include('single_pages.urls')) # IP주소/
 ]
+
 
