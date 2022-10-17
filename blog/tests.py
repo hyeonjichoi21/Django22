@@ -17,12 +17,12 @@ class TestView(TestCase):
 
         soup = BeautifulSoup(response.content, 'html.parser')
         # title이 정상적으로 보이는지
-        self.assertEqual(soup.title.text, 'Blog')
+        self.assertEqual(soup.title.text, 'blog')
 
         # navbar가 정상적으롭 보이는지
         navbar = soup.nav
-        self.assertIn('Blog', navbar.text)
-        self.assertIn('About Me', navbar.text)
+        self.assertIn('blog', navbar.text)
+        self.assertIn('about me', navbar.text)
 
         # post가 정상적으로 보이는지
         # 1. 맨 처음엔 Post가 없음
