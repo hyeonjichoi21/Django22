@@ -11,18 +11,17 @@ class TestView(TestCase):
 
     def test_post_list(self):
         response = self.client.get('/blog/', follow=True )  # 301
-
         # response 결과가 정상적으로 보이는지
         self.assertEqual(response.status_code, 200)
 
         soup = BeautifulSoup(response.content, 'html.parser')
         # title이 정상적으로 보이는지
-        self.assertEqual(soup.title.text, 'blog')
+        self.assertEqual(soup.title.text, 'Blog')
 
         # navbar가 정상적으롭 보이는지
         navbar = soup.nav
-        self.assertIn('blog', navbar.text)
-        self.assertIn('about me', navbar.text)
+        self.assertIn('Blog', navbar.text)
+        self.assertIn('About me', navbar.text)
 
         # post가 정상적으로 보이는지
         # 1. 맨 처음엔 Post가 없음
@@ -43,4 +42,23 @@ class TestView(TestCase):
         self.assertIn(post_002.title, main_area.text)
         self.assertNotIn('아직 게시물이 없습니다.', main_area.text)
 
+    def test_post_detail(self):
+        post_001 = Post.objects.create(title="첫번째 포스트", content="첫번째 포스트입니다.")
+        self.assertEqual(post_001.get_absolute_url(), '/blog/1/')
+
+        response = self.client.get(post_001.get_absolute_url(), follow=True) # '/blog/1/'
+        self.assertEqual(response.status_code, 200)
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        # navbar가 정상적으롭 보이는지
+        navbar = soup.nav
+        self.assertIn('Blog', navbar.text)
+        self.assertIn('About me', navbar.text)
+
+        self.assertIn(post_001.title, soup.title.text)
+
+        main_area = soup.find('div', id='main-area')
+        post_area = main_area.find('div', id='post-area')
+        self.assertIn(post_001.title, post_area.text)
+        self.assertIn(post_001.content, post_area.text)
 
